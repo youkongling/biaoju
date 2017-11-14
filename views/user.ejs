@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>用户表</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap-table/dist/bootstrap-table.css">
+    <script src="/bootstrap-table/dist/bootstrap-table.js"></script>
+    <script src="/bootstrap-table/dist/extensions/export/bootstrap-table-export.js"></script>
+    <script src="http://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+    <script src="/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="nav nav-pills">
+                    <li role="presentation"><a href="/order">订单表</a></li>
+                    <li role="presentation" class="active"><a href="/user">用户表</a></li>
+                    <li role="presentation"><a href="/receiveOrder">接单表</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <table id="table"></table>
+    <script>
+    $(function() {
+        $('#table').bootstrapTable({
+            ajax: function(request) {
+                $.ajax({
+                    type: "GET",
+                    url: "/userData",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: '',
+                    jsonp: 'callback',
+                    success: function(msg) {
+                        var _msg = JSON.parse(msg);
+                        console.log(_msg);
+                        request.success({
+                            row: _msg.obj
+                        });
+                        $('#table').bootstrapTable('load', _msg.obj);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            },
+
+            toolbar: "#toolbar",
+            uniqueId: "id",
+            cache: true,
+            striped: true,
+            sidePagination: "client",
+            sortName: 'uid',
+            sortOrder: "asc",
+            pagination: true,
+            search: true,
+            strictSearch: true,
+            showColumns: true,
+            showRefresh: true,
+            showToggle: true,
+            clickToSelect: true,
+            showExport: true,
+            exportDataType: "select",
+            minimumCountColumns: 2,
+            pageNumber: 1,
+            pageSize: 15,
+            pageList: [15, 30, 50, 100, "ALL"],
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            paginationFirstText: "首页",
+            paginationLastText: "尾页",
+            columns: [{
+                checkbox: true,
+            }, {
+                field: 'createTime',
+                title: '创建时间',
+                sortable: true
+            }, {
+                field: 'creditScore',
+                title: '信誉度',
+                sortable: true
+            }, {
+                field: 'id',
+                title: '用户ID',
+                sortable: true
+            }, {
+                field: 'name',
+                title: '姓名',
+            }, {
+                field: 'phoneNum',
+                title: '电话号码',
+            }, {
+                field: 'school',
+                title: '学校',
+            }, {
+                field: 'studentCard',
+                title: '学生证',
+            }, {
+                field: 'updatetime',
+                title: '更新时间',
+                sortable: true
+            }],
+
+        });
+    });
+    </script>
+</body>
+
+</html>

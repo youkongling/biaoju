@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>订单表</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap-table/dist/bootstrap-table.css">
+    <script src="/bootstrap-table/dist/bootstrap-table.js"></script>
+    <script src="/bootstrap-table/dist/extensions/export/bootstrap-table-export.js"></script>
+    <script src="http://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+    <script src="/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+
+<body>
+	<div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="nav nav-pills">
+                    <li role="presentation" class="active"><a href="/order">订单表</a></li>
+                    <li role="presentation"><a href="/user">用户表</a></li>
+                    <li role="presentation"><a href="/receiveOrder">接单表</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <table id="table"></table>
+    <script>
+    $(function() {
+        $('#table').bootstrapTable({
+            ajax: function(request) {
+                $.ajax({
+                    type: "GET",
+                    url: "/orderData",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: '',
+                    jsonp: 'callback',
+                    success: function(msg) {
+                        var _msg = JSON.parse(msg);
+                        console.log(_msg);
+                        request.success({
+                            row: _msg.obj
+                        });
+                        $('#table').bootstrapTable('load', _msg.obj);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            },
+
+            toolbar: "#toolbar",
+            uniqueId: "id",
+            cache: true,
+            striped: true,
+            sidePagination: "client",
+            sortName: 'uid',
+            sortOrder: "asc",
+            pagination: true,
+            search: true,
+            strictSearch: true,
+            showColumns: true,
+            showRefresh: true,
+            showToggle: true,
+            clickToSelect: true,
+            showExport: true,
+            exportDataType: "select",
+            minimumCountColumns: 2,
+            pageNumber: 1,
+            pageSize: 15,
+            pageList: [15, 30, 50, 100, "ALL"],
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            paginationFirstText: "首页",
+            paginationLastText: "尾页",
+            columns: [{
+                checkbox: true,
+            }, {
+                field: 'createTime',
+                title: '创建时间',
+                sortable: true
+            }, {
+                field: 'descration',
+                title: '描述',
+            }, {
+                field: 'enable',
+                title: '已取货',
+            }, {
+                field: 'getAddress',
+                title: '取货地址',
+            }, {
+                field: 'hurry',
+                title: '是否加急',
+                sortable: true
+            }, {
+                field: 'id',
+                title: '订单ID',
+                visiable: false,
+            }, {
+                field: 'name',
+                title: '姓名',
+            }, {
+                field: 'openid',
+                title: '微信openID',
+            }, {
+                field: 'payid',
+                title: '微信支付ID',
+            }, {
+                field: 'receiveAddress',
+                title: '收货地址',
+            }, {
+                field: 'receiveNum',
+                title: '取货码',
+            }, {
+                field: 'size',
+                title: '大小',
+                sortable: true
+            }, {
+                field: 'status',
+                title: '状态',
+                sortable: true
+            }, {
+                field: 'updateTime',
+                title: '更新时间',
+                sortable: true
+            }],
+
+        });
+    });
+    </script>
+</body>
+
+</html>
