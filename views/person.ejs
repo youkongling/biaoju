@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>镖师家族</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.min.js" async></script>
+</head>
+
+<body>
+    <header data-am-widget="header" class="am-header am-header-default">
+        <div class="am-header-left am-header-nav">
+            <a href="javascript:window.history.back();" class="">
+                <!-- <i class="am-header-icon am-icon-angle-left am-icon-sm"></i> -->
+            </a>
+        </div>
+        <h1 class="am-header-title">
+            <a href="#" class="">镖师录入</a>
+        </h1>
+    </header>
+    <style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    section {
+        height: calc(100% - 49px);
+        background-color: rgba(0, 0, 0, 0.02);
+        padding-top: 10px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
+    .xb-custom {
+        /*width: 100%;*/
+        /*height: calc(100% - 48px);*/
+    }
+
+    .xb-custom .custom-list {
+        padding-top: 8px;
+        font-size: 16px;
+        clear: both;
+    }
+
+    .custom-list .custom-list-item {
+        width: 96%;
+        margin-left: 2%;
+        margin-right: 2%;
+        padding: 10px 10px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 3px;
+        background-color: #FFF;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .custom-list .custom-list-item span:nth-child(1) {
+        font-weight: bold;
+    }
+
+    .custom-list .custom-btn {
+        position: absolute;
+        top: 28px;
+        right: 4px;
+    }
+
+    .custom-list .custom-btn .am-btn {
+        border-radius: 3px;
+        padding: 0.5em 0.7em;
+    }
+    </style>
+    <section>
+        <div class="am-g xb-search">
+            <div class="am-u-sm-12">
+                <form method="post" action="/person/search" class="">
+                    <div class="am-input-group">
+                        <input type="text" class="am-form-field" name="queryUser" placeholder="输入你想查询镖师的电话号码" maxlength="11" minlength="11">
+                        <span class="am-input-group-btn">
+                            <button class="am-btn am-btn-primary" type="submit"><span class="am-icon-search"></span> </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="am-g xb-custom">
+            <div class="custom-list">
+                <% if(data.length){ %>
+                    <% for(var i=0; i<data.length; i++){ %>
+                        <div class="am-u-sm-12 custom-list-item">
+                            <div class="am-u-sm-12 custom-item-group">
+                                <span>姓名：</span>
+                                <span><%= data[i].name %></span>
+                            </div>
+                            <div class="am-u-sm-12 custom-item-group">
+                                <span>电话号码：</span>
+                                <span><%= data[i].tel %></span>
+                            </div>
+                            <div class="am-u-sm-12 custom-item-group">
+                                <span>是否允许接单：</span>
+                                <span class="xb-allow"><%= data[i].allow ? '允许' : '不允许' %></span>
+                            </div>
+                            <div class="custom-btn">
+                                <button type="button" class="am-btn am-btn-primary xb-toggle" data-id="<%= data[i].tel %>" data-am-button="">允许</button>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+            <script>
+            $(function() {
+                function t() {
+                    var t = n.hasClass("am-active") ? "允许" : "不允许";
+                    console.log(t)
+                    this.innerHTML = t;
+                }
+                var toggles = document.querySelectorAll('.xb-toggle');
+                for (var i = 0; i < toggles.length; i++) {
+                    toggles[i].addEventListener("click", function(e) {
+                        var allow = this.classList.contains('am-active') ? "允许" : "不允许";
+                        this.innerText = allow;
+                        this.parentNode.parentNode.querySelector('.xb-allow').innerText = allow;
+                        var id = this.dataset.id;
+                        $.ajax({
+                            type: 'post',
+                            url: '',
+                            data: { phonenum: id },
+                            success: function(data) {
+                                console.log(data);
+                            },
+                            error: function(err) {
+                                console.err(err);
+                            }
+                        });
+                    })
+                }
+            })
+            </script>
+        </div>
+    </section>
+</body>
+
+</html>
