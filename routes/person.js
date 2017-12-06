@@ -3,37 +3,56 @@ var router = express.Router();
 var request = require('request');
 
 var config = {
-    order: 'http://www.kuaidibiaoju.com/WxPost/data/lxj1996/getOrder',
-    user: 'http://www.kuaidibiaoju.com/WxPost/data/lxj1996/getUser',
-    receiveOrder: 'http://www.kuaidibiaoju.com/WxPost/data/lxj1996/getReceiveOrder'
+    getuser: 'http://www.kuaidibiaoju.com/WxPost/getuser',
+    getenlist: 'http://www.kuaidibiaoju.com/WxPost/getenlist',
+    chanen: 'http://www.kuaidibiaoju.com/WxPost/chanen',
+    chanenin: 'http://www.kuaidibiaoju.com/WxPost/chanenin'
 }
 
 router.get('/', function(req, res, next) {
-    var data = [];
-    for (var i = 0; i < 10; i++) {
-        var item = {
-            name: '小波',
-            tel: '15779423569',
-            allow: true,
-        };
-        data.push(item);
-    }
-    res.render('person', { data: data });
+    request.get(config.getenlist, function(err, response, body) {
+        var _body = JSON.parse(JSON.parse(body));
+        var data = [];
+        for (var i = 0; i < _body.obj.length; i++) {
+            var item = {
+                name: _body.obj[i].name,
+                tel: _body.obj[i].phoneNum,
+                allow: _body.obj[i].enable,
+            };
+            data.push(item);
+        }
+        res.render('person', { data: data });
+    });
 });
 
 router.post('/search', function(req, res, next) {
     var queryUser = req.body.queryUser;
-    console.log(queryUser)
-    var data = [];
-    for (var i = 0; i < 10; i++) {
-        var item = {
-            name: '小波',
-            tel: '15779423569',
-            allow: true,
-        };
-        data.push(item);
-    }
-    res.render('person', { data: data });
+    request.get(config.getuser + '?phonenum=' + queryUser, function(err, response, body) {
+        var _body = JSON.parse(JSON.parse(body));
+        console.log(_body);
+        var data = [];
+        for (var i = 0; i < 1; i++) {
+            var item = {
+                name: _body.obj.name,
+                tel: queryUser,
+                allow: _body.obj.enable,
+            };
+            data.push(item);
+        }
+        res.render('person', { data: data });
+    });
+});
+
+router.post('/edit', function(req, res, next) {
+    var phonenum = req.body.phonenum;
+    console.log(phonenum);
+    request.get(config.chanen + '?phonenum=' + phonenum, function(err, response, body) {
+        // console.log(body);
+        var _body = JSON.parse(JSON.parse(body));
+        console.log(_body);
+
+        res.send("111");
+    });
 });
 
 module.exports = router;

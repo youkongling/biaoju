@@ -14,7 +14,7 @@
     <header data-am-widget="header" class="am-header am-header-default">
         <div class="am-header-left am-header-nav">
             <a href="javascript:window.history.back();" class="">
-                <!-- <i class="am-header-icon am-icon-angle-left am-icon-sm"></i> -->
+                <i class="am-header-icon am-icon-angle-left am-icon-sm"></i>
             </a>
         </div>
         <h1 class="am-header-title">
@@ -104,7 +104,7 @@
                                 <span class="xb-allow"><%= data[i].allow ? '允许' : '不允许' %></span>
                             </div>
                             <div class="custom-btn">
-                                <button type="button" class="am-btn am-btn-primary xb-toggle" data-id="<%= data[i].tel %>" data-am-button="">允许</button>
+                                <button type="button" class="am-btn am-btn-primary xb-toggle" data-id="<%= data[i].tel %>" data-am-button=""><%= data[i].allow ? '不允许' : '允许' %></button>
                             </div>
                         </div>
                     <% } %>
@@ -112,21 +112,17 @@
             </div>
             <script>
             $(function() {
-                function t() {
-                    var t = n.hasClass("am-active") ? "允许" : "不允许";
-                    console.log(t)
-                    this.innerHTML = t;
-                }
                 var toggles = document.querySelectorAll('.xb-toggle');
                 for (var i = 0; i < toggles.length; i++) {
                     toggles[i].addEventListener("click", function(e) {
-                        var allow = this.classList.contains('am-active') ? "允许" : "不允许";
-                        this.innerText = allow;
+                        var allow = this.classList.contains('am-active') ? "不允许" : "允许";
+                        var xbAllow = this.classList.contains('am-active') ? "允许" : "不允许";
+                        this.innerText = xbAllow;
                         this.parentNode.parentNode.querySelector('.xb-allow').innerText = allow;
                         var id = this.dataset.id;
                         $.ajax({
                             type: 'post',
-                            url: '',
+                            url: '/person/edit',
                             data: { phonenum: id },
                             success: function(data) {
                                 console.log(data);
