@@ -64,11 +64,18 @@
 
     .custom-list .custom-btn {
         position: absolute;
-        top: 28px;
+        top: 20px;
         right: 4px;
     }
 
-    .custom-list .custom-btn .am-btn {
+    .custom-list .custom-btn1 {
+        position: absolute;
+        top: 64px;
+        right: 4px;
+    }
+
+    .custom-list .custom-btn .am-btn,
+    .custom-list .custom-btn1 .am-btn {
         border-radius: 3px;
         padding: 0.5em 0.7em;
     }
@@ -103,8 +110,19 @@
                                 <span>是否允许接单：</span>
                                 <span class="xb-allow"><%= data[i].allow ? '允许' : '不允许' %></span>
                             </div>
+                            <div class="am-u-sm-12 custom-item-group">
+                                <span>是否打钱：</span>
+                                <span class="xb-allow1"><%= data[i].money ? '打钱' : '不打钱' %></span>
+                            </div>
                             <div class="custom-btn">
-                                <button type="button" class="am-btn am-btn-primary xb-toggle" data-id="<%= data[i].tel %>" data-am-button=""><%= data[i].allow ? '不允许' : '允许' %></button>
+                                <button type="button" class="am-btn am-btn-primary xb-toggle" data-id="<%= data[i].tel %>" data-am-button="">
+                                    <%= data[i].allow ? '不允许' : '允许' %>
+                                </button>
+                            </div>
+                            <div class="custom-btn1">
+                                <button type="button" class="am-btn am-btn-primary xb-toggle1" data-id="<%= data[i].tel %>" data-am-button="">
+                                    <%= data[i].money ? '不打钱' : '打钱' %>
+                                </button>
                             </div>
                         </div>
                     <% } %>
@@ -115,14 +133,36 @@
                 var toggles = document.querySelectorAll('.xb-toggle');
                 for (var i = 0; i < toggles.length; i++) {
                     toggles[i].addEventListener("click", function(e) {
-                        var allow = this.classList.contains('am-active') ? "不允许" : "允许";
-                        var xbAllow = this.classList.contains('am-active') ? "允许" : "不允许";
-                        this.innerText = xbAllow;
-                        this.parentNode.parentNode.querySelector('.xb-allow').innerText = allow;
+                        var allow = (this.innerText == "不允许") ? "允许" : "不允许";
+                        var xbAllow = (allow == "不允许") ? "允许" : "不允许";
+                        this.innerText = allow;
+                        this.parentNode.parentNode.querySelector('.xb-allow').innerText = xbAllow;
                         var id = this.dataset.id;
                         $.ajax({
                             type: 'post',
                             url: '/person/edit',
+                            data: { phonenum: id },
+                            success: function(data) {
+                                console.log(data);
+                            },
+                            error: function(err) {
+                                console.err(err);
+                            }
+                        });
+                    })
+                }
+
+                var toggles1 = document.querySelectorAll('.xb-toggle1');
+                for (var i = 0; i < toggles1.length; i++) {
+                    toggles1[i].addEventListener("click", function(e) {
+                        var allow = (this.innerText == "不打钱") ? "打钱" : "不打钱";
+                        var xbAllow = (allow == "不打钱") ? "打钱" : "不打钱";
+                        this.innerText = allow;
+                        this.parentNode.parentNode.querySelector('.xb-allow1').innerText = xbAllow;
+                        var id = this.dataset.id;
+                        $.ajax({
+                            type: 'post',
+                            url: '/person/editIn',
                             data: { phonenum: id },
                             success: function(data) {
                                 console.log(data);

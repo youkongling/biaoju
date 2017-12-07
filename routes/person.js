@@ -12,15 +12,18 @@ var config = {
 router.get('/', function(req, res, next) {
     request.get(config.getenlist, function(err, response, body) {
         var _body = JSON.parse(JSON.parse(body));
+        console.log(_body);
         var data = [];
         for (var i = 0; i < _body.obj.length; i++) {
             var item = {
                 name: _body.obj[i].name,
                 tel: _body.obj[i].phoneNum,
                 allow: _body.obj[i].enable,
+                money: (_body.obj[i].creditScore == 666) ? false : true
             };
             data.push(item);
         }
+        console.log(data)
         res.render('person', { data: data });
     });
 });
@@ -36,6 +39,7 @@ router.post('/search', function(req, res, next) {
                 name: _body.obj.name,
                 tel: queryUser,
                 allow: _body.obj.enable,
+                money: (_body.obj.creditScore == 666) ? false : true
             };
             data.push(item);
         }
@@ -45,13 +49,25 @@ router.post('/search', function(req, res, next) {
 
 router.post('/edit', function(req, res, next) {
     var phonenum = req.body.phonenum;
-    console.log(phonenum);
+    // console.log(phonenum);
     request.get(config.chanen + '?phonenum=' + phonenum, function(err, response, body) {
         // console.log(body);
         var _body = JSON.parse(JSON.parse(body));
         console.log(_body);
 
-        res.send("111");
+        res.send("hello");
+    });
+});
+
+router.post('/editIn', function(req, res, next) {
+    var phonenum = req.body.phonenum;
+    // console.log(phonenum);
+    request.get(config.chanenin + '?phonenum=' + phonenum, function(err, response, body) {
+        // console.log(body);
+        var _body = JSON.parse(JSON.parse(body));
+        console.log(_body);
+
+        res.send("hello");
     });
 });
 
